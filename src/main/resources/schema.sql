@@ -1,0 +1,1 @@
+create or replace table credit_card (credit_card_seq_id integer not null,card_balance integer not null,card_number varchar(255) not null,card_limit integer not null,customer_name varchar(255) not null,primary key (credit_card_seq_id))

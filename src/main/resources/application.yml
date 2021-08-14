@@ -1,0 +1,79 @@
+spring:
+
+  profiles:
+    default: development
+    active: development
+  jackson.deserialization.fail-on-unknown-properties: true
+  jackson.default-property-inclusion: NON_NULL
+---
+
+spring:
+  profiles: development
+  h2:
+    console:
+      enabled: true
+      path: /h2
+    datasource:
+      url: jdbc:h2:file:~/test
+      username: sa
+      password:
+      driverClassName: org.h2.Driver
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+
+server:
+  port: 9080
+
+---
+
+spring:
+  profiles: test
+
+server:
+  port: 9080
+
+---
+
+spring:
+  profiles: production
+  datasource:
+    jndi-name: jdbc/oracle
+
+server:
+  port: 9080
+
+
+---
+# common properties for yaml
+
+server:
+  servlet:
+    context-path: /credit-card-microservice/v1.0
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+
+hystrix:
+  command:
+    database:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+            interruptOnTimeout: true
+      fallback:
+        enabled: true
+      circuitBreaker:
+        enabled: true
+        sleepWindowInMilliseconds: 10000
+        requestVolumeThreshold: 2
+        errorThresholdPercentage: 50
