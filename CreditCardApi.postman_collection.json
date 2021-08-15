@@ -1,0 +1,80 @@
+{
+	"info": {
+		"_postman_id": "860a8989-aff8-488f-b554-8149c34f8423",
+		"name": "CreditCardApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "add new card details",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "txn-correlation-id",
+						"value": "11111",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n        \"name\": \"DP\",\n        \"creditCardNumber\": \"123456789072\",\n        \"balance\": 1000,\n        \"limit\": 1000\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9080/credit-card-microservice/v1.0/add",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"credit-card-microservice",
+						"v1.0",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fetch card all card details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "txn-correlation-id",
+						"value": "111111",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:9080/credit-card-microservice/v1.0/all",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"credit-card-microservice",
+						"v1.0",
+						"all"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

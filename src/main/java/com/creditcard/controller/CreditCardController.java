@@ -7,8 +7,10 @@ import com.creditcard.service.CreditCardService;
 import com.creditcard.service.CreditCardServiceImpl;
 import com.creditcard.validation.CardNumberValidation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,10 +25,11 @@ import org.apache.logging.log4j.LogManager;
 
 
 @RestController
+@Validated
 @CrossOrigin(origins = "*")
 public class CreditCardController {
 
-    Logger logger = LogManager.getLogger(CreditCardController.class);
+    Logger LOGGER = LogManager.getLogger(CreditCardController.class);
 
     @Autowired
     CreditCardService creditCardService;
@@ -41,7 +44,7 @@ public class CreditCardController {
     @GetMapping(value = "/all")
     @ResponseStatus(OK)
     public ResponseEntity<List<CreditCardResponse>> get(@RequestHeader(name = "txn-correlation-id", required = true) String correlationId) {
-        logger.info("get method started correlationId"+correlationId);
+        LOGGER.info("POST get method Entry ----> "+correlationId);
         return new ResponseEntity<List<CreditCardResponse>>(creditCardService.fetchAllCardDetails(correlationId), OK);
     }
 
@@ -50,9 +53,10 @@ public class CreditCardController {
     @ResponseStatus(CREATED)
     @Valid
     public ResponseEntity<String> save(@RequestHeader(name = "txn-correlation-id", required = true) String correlationId, @RequestBody @Valid CreditCardRequest creditCardRequest){
-        logger.debug("correlationId "+correlationId+" creditCardRequest payload "+creditCardRequest);
-        logger.info("save method started correlationId"+correlationId);
+        LOGGER.debug("correlationId "+correlationId+" creditCardRequest payload "+creditCardRequest);
+        LOGGER.info("POST save method Entry ----> "+correlationId);
         creditCardService.addCardDetails(creditCardRequest, correlationId);
+        LOGGER.info("POST save method Exit ----> "+correlationId);
         return new ResponseEntity<String>(CreditCardConstant.SUCCESS, CREATED);
     }
 

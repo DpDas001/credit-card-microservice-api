@@ -23,7 +23,18 @@ The Idempotency flow is driven by the mandatory `Card Number` in the body. If th
 
 The internal Log4j2 Configuration Logging is used on this project. This will capture HTTP header information per request for logging purposes. This is useful for tracking requests in environments such as SIT using the unique `txn-correlation-id` value.
 
-### Error handling
+### Validations
+
+Spring-boot validation framework is used to validation the fields and also luhn algorithm validation is also used.
+Below are the validations used in the API
+1. Header validation for correlation-id mandatory check
+2. Input request body validation 
+3. Custom luhn algorithm validation for card number
+
+
+
+
+### Error handling  
 
 Global Exception Handling is used for all errors and unhappy path. This includes all validation issues, Not found paths and other Runtime Exceptions. Refer to this [link](https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc) for further information.
 
@@ -42,9 +53,60 @@ All captured errors are rendered in a consistent JSON format for the Channel API
 ## Run
 
 You can run this in your development environment via a local Server.
-
+- java version "1.8.0_291"
+- maven 3.8.1  
 - Run Local - `mvn clean spring-boot:run`
 - Run Local in DEBUG mode - `mvn clean spring-boot:debug`
+
+## Endpoints
+
+**** save end point POST http://localhost:9080/credit-card-microservice/v1.0/add *****
+
+Request header
+Accept:application/json
+Content-Type:application/json
+txn-correlation-id:11111
+
+Request body
+{
+"name": "DP",
+"creditCardNumber": "123456789072",
+"balance": 1000,
+"limit": 1000
+}
+
+Response 
+201 CREATED
+
+**** Fetch end point GET http://localhost:9080/credit-card-microservice/v1.0/all ******
+
+Request header
+Accept:application/json
+Content-Type:application/json
+txn-correlation-id:111111
+
+Response Body
+[
+{
+"name": "avi",
+"creditCardNumber": "123456789007",
+"balance": 0,
+"limit": 20000
+},
+{
+"name": "Jaya",
+"creditCardNumber": "123456789015",
+"balance": 1000,
+"limit": 3000
+},
+{
+"name": "DP",
+"creditCardNumber": "123456789072",
+"balance": 1000,
+"limit": 1000
+}
+]
+
 
 ## Test
 

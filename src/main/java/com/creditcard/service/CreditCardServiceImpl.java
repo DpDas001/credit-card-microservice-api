@@ -22,7 +22,7 @@ import org.apache.logging.log4j.LogManager;
 @Service
 public class CreditCardServiceImpl implements CreditCardService {
 
-    Logger logger = LogManager.getLogger(CreditCardServiceImpl.class);
+    Logger LOGGER = LogManager.getLogger(CreditCardServiceImpl.class);
 
     @Autowired
     CreditCardRepository repository;
@@ -34,7 +34,7 @@ public class CreditCardServiceImpl implements CreditCardService {
     CardNumberValidation cardNumberValidation;
 
     public void addCardDetails(CreditCardRequest creditCardRequest, String correlationId) {
-
+        LOGGER.info("addCardDetails method Entry correlationId "+correlationId);
         cardNumberValidationCheck(creditCardRequest, correlationId);
 
         cardNumberExistCheck(creditCardRequest, correlationId);
@@ -45,29 +45,31 @@ public class CreditCardServiceImpl implements CreditCardService {
         creditCard.setBalance(creditCardRequest.getBalance());
         creditCard.setLimit(creditCardRequest.getLimit());
         repository.save(creditCard);
-        logger.info("correlationId "+correlationId+ " Card details has been added successfully ");
+        LOGGER.info("addCardDetails method Exit correlationId "+correlationId+ " Card details has been added successfully ");
     }
 
     private void cardNumberExistCheck(CreditCardRequest creditCardRequest, String correlationId) {
         Boolean isCardNumberExist = repository.findByCreditCardNumber(creditCardRequest.getCreditCardNumber()) == null ? Boolean.FALSE : Boolean.TRUE;
         if (isCardNumberExist) {
-            logger.error("correlationId "+correlationId+ " InvalidCardNumberException "+ creditCardRequest.getCreditCardNumber());
+            LOGGER.error("cardNumberExistCheck correlationId "+correlationId+ " InvalidCardNumberException "+ creditCardRequest.getCreditCardNumber());
             throw new RecordExistException();
         }
     }
 
     private void cardNumberValidationCheck(CreditCardRequest creditCardRequest, String correlationId) {
         if(!cardNumberValidation.isValid(creditCardRequest.getCreditCardNumber())){
-            logger.error("correlationId "+correlationId+ " InvalidCardNumberException "+ creditCardRequest.getCreditCardNumber());
+            LOGGER.error("cardNumberValidationCheck correlationId "+correlationId+ " InvalidCardNumberException "+ creditCardRequest.getCreditCardNumber());
             throw new InvalidCardNumberException();
         }
     }
 
     public List<CreditCardResponse> fetchAllCardDetails(String correlationId) {
 
-        logger.info("correlationId "+correlationId+ " result size " + repository.findAll().size());
-        return repository.findAll().stream().map(creditCard -> creditCardResponseMapper.map(creditCard))
+        LOGGER.info("fetchAllCardDetails method Entry correlationId "+correlationId);
+        List<CreditCardResponse> CreditCardResponseList = repository.findAll().stream().map(creditCard -> creditCardResponseMapper.map(creditCard))
                 .collect(Collectors.toList());
+        LOGGER.info("fetchAllCardDetails method Exit correlationId "+correlationId+ " CreditCardResponseList size " + CreditCardResponseList.size());
+        return CreditCardResponseList;
 
     }
 }
